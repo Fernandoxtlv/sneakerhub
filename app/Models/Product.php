@@ -305,7 +305,7 @@ class Product extends Model
     {
         $mainImage = $this->mainImage;
         if ($mainImage) {
-            return asset('storage/' . $mainImage->path);
+            return $mainImage->url;
         }
         return asset('images/placeholder-sneaker.png');
     }
@@ -316,8 +316,8 @@ class Product extends Model
     public function getThumbnailUrlAttribute(): string
     {
         $mainImage = $this->mainImage;
-        if ($mainImage && $mainImage->path_thumb) {
-            return asset('storage/' . $mainImage->path_thumb);
+        if ($mainImage) {
+            return $mainImage->thumbnail_url;
         }
         return $this->main_image_url;
     }

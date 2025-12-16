@@ -58,6 +58,9 @@ class ProductImage extends Model
      */
     public function getUrlAttribute(): string
     {
+        if (str_starts_with($this->path, 'http')) {
+            return $this->path;
+        }
         return asset('storage/' . $this->path);
     }
 
@@ -67,6 +70,9 @@ class ProductImage extends Model
     public function getThumbnailUrlAttribute(): string
     {
         if ($this->path_thumb) {
+            if (str_starts_with($this->path_thumb, 'http')) {
+                return $this->path_thumb;
+            }
             return asset('storage/' . $this->path_thumb);
         }
         return $this->url;
@@ -78,6 +84,9 @@ class ProductImage extends Model
     public function getMediumUrlAttribute(): string
     {
         if ($this->path_medium) {
+            if (str_starts_with($this->path_medium, 'http')) {
+                return $this->path_medium;
+            }
             return asset('storage/' . $this->path_medium);
         }
         return $this->url;

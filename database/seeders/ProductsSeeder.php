@@ -297,6 +297,21 @@ class ProductsSeeder extends Seeder
                 'gender' => 'men',
                 'featured' => true,
             ],
+            // Goodyear Products
+            [
+                'name' => 'Ojota Goodyear',
+                'brand' => 'Goodyear',
+                'category' => 'Casual',
+                'price' => 89.00,
+                'cost_price' => 40.00,
+                'description' => 'Ojotas Goodyear diseñadas para el máximo confort y durabilidad en días calurosos.',
+                'short_description' => 'Resistencia y confort.',
+                'stock' => 50,
+                'sizes' => [38, 39, 40, 41, 42, 43],
+                'color' => 'Negro',
+                'gender' => 'unisex',
+                'featured' => false,
+            ],
         ];
 
         foreach ($products as $productData) {
@@ -307,76 +322,88 @@ class ProductsSeeder extends Seeder
                 continue;
             }
 
-            $product = Product::create([
-                'name' => $productData['name'],
-                'brand_id' => $brand->id,
-                'category_id' => $category->id,
-                'price' => $productData['price'],
-                'cost_price' => $productData['cost_price'],
-                'discount' => $productData['discount'] ?? 0,
-                'description' => $productData['description'],
-                'short_description' => $productData['short_description'],
-                'stock' => $productData['stock'],
-                'sizes_available' => $productData['sizes'],
-                'color' => $productData['color'],
-                'gender' => $productData['gender'],
-                'featured' => $productData['featured'],
-                'is_active' => true,
-                'is_new' => true,
-            ]);
+            $product = Product::updateOrCreate(
+                ['name' => $productData['name']],
+                [
+                    'brand_id' => $brand->id,
+                    'category_id' => $category->id,
+                    'price' => $productData['price'],
+                    'cost_price' => $productData['cost_price'],
+                    'discount' => $productData['discount'] ?? 0,
+                    'description' => $productData['description'],
+                    'short_description' => $productData['short_description'],
+                    'stock' => $productData['stock'],
+                    'sizes_available' => $productData['sizes'],
+                    'color' => $productData['color'],
+                    'gender' => $productData['gender'],
+                    'featured' => $productData['featured'],
+                    'is_active' => true,
+                    'is_new' => true,
+                ]
+            );
 
-            // Image Mapping for variety (using available generated images)
+            // Image Mapping
             $imageMap = [
-                // Black/Sporty (Dark Theme)
+                // Generated Locally
                 'Nike Air Max 270' => 'products/nike-air-max-270.png',
-                'Adidas Ultraboost 22' => 'products/nike-air-max-270.png',
-                'Puma Suede Classic XXI' => 'products/nike-air-max-270.png', // Correcting: Suede is Black
-                'Converse Chuck Taylor All Star' => 'products/nike-air-max-270.png', // Correcting: Chuck is Black
-                'Vans Old Skool' => 'products/nike-air-max-270.png',
-                'Reebok Nano X2' => 'products/nike-air-max-270.png',
+                
+                // Nike
+                'Nike Air Force 1 07' => 'products/Nike Air Force 1 07.avif',
+                'Nike ZoomX Vaporfly NEXT% 2' => 'products/Nike ZoomX Vaporfly NEXT% 2.webp',
+                'Nike Dunk Low Retro' => 'products/Nike Dunk Low Retro.webp',
+                'Nike Air Jordan 1 Low' => 'products/air-jordan-1-low.avif',
+                
+                // Adidas
+                'Adidas Ultraboost 22' => 'products/Adidas Ultraboost 22.avif',
+                'Adidas Stan Smith' => 'products/Adidas Stan Smith.jpg',
+                'Adidas Superstar' => 'products/Adidas Superstar.webp',
+                'Adidas Forum Low' => 'products/Adidas Forum Low.avif',
+                
+                // Puma
+                'Puma RS-X' => 'products/Puma RS-X.avif',
+                'Puma Suede Classic XXI' => 'products/Puma Suede Classic XXI.avif',
+                
+                // New Balance
+                'New Balance 574' => 'products/New Balance 574.webp',
+                'New Balance Fresh Foam 1080v12' => 'products/New Balance Fresh Foam 1080v12.jfif',
+                
+                // Converse
+                'Converse Chuck Taylor All Star' => 'products/Converse Chuck Taylor All Star.jpg',
+                'Converse Chuck 70' => 'products/Converse Chuck 70.webp',
+                
+                // Vans
+                'Vans Old Skool' => 'products/Vans Old Skool.webp',
+                'Vans Sk8-Hi' => 'products/Vans Sk8-Hi.webp',
+                
+                // Reebok
+                'Reebok Classic Leather' => 'products/Reebok Classic Leather.webp',
+                'Reebok Nano X2' => 'products/Reebok Nano X2.jfif',
 
-                // Colorful/Blue/HighContrast (Basketball Theme)
-                'Nike Air Jordan 1 Low' => 'products/basketball-placeholder.png',
-                'Puma RS-X' => 'products/basketball-placeholder.png',
-                'Vans Sk8-Hi' => 'products/basketball-placeholder.png',
-                'Adidas Forum Low' => 'products/basketball-placeholder.png', // Adding color
-                'New Balance Fresh Foam 1080v12' => 'products/basketball-placeholder.png', // Blue
-
-                // Grey/Sporty (Running Theme)
-                'Nike ZoomX Vaporfly NEXT% 2' => 'products/running-placeholder.png',
-                'New Balance 574' => 'products/running-placeholder.png',
-
-                // White (Limited to actual white shoes)
-                'Nike Air Force 1 07' => 'products/nike-air-force-1.png',
-                'Adidas Superstar' => 'products/nike-air-force-1.png',
-                'Adidas Stan Smith' => 'products/casual-placeholder.png',
-                'Reebok Classic Leather' => 'products/casual-placeholder.png',
-                'Nike Dunk Low Retro' => 'products/casual-placeholder.png',
-                'Converse Chuck 70' => 'products/casual-placeholder.png',
+                // Goodyear
+                'Ojota Goodyear' => 'products/ojota goodyear.webp',
             ];
 
-            // Default fallback based on category
-            $imagePath = 'products/casual-placeholder.png';
-            if ($category->name === 'Running' || $category->name === 'Training') {
-                $imagePath = 'products/running-placeholder.png';
-            } elseif ($category->name === 'Basketball' || $category->name === 'Skateboarding') {
-                $imagePath = 'products/basketball-placeholder.png';
-            }
-
-            // Override if specific mapping exists
+            // Default fallback
+            $imagePath = 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=800&auto=format&fit=crop'; // Generic sneaker
+            
+            // Apply specific image if available
             if (isset($imageMap[$productData['name']])) {
                 $imagePath = $imageMap[$productData['name']];
             }
 
-            ProductImage::create([
-                'product_id' => $product->id,
-                'filename' => basename($imagePath),
-                'path' => $imagePath,
-                'path_medium' => $imagePath,
-                'path_thumb' => $imagePath,
-                'is_main' => true,
-                'position' => 1
-            ]);
+            ProductImage::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'is_main' => true,
+                ],
+                [
+                    'filename' => basename($imagePath),
+                    'path' => $imagePath,
+                    'path_medium' => $imagePath,
+                    'path_thumb' => $imagePath,
+                    'position' => 1
+                ]
+            );
         }
     }
 }

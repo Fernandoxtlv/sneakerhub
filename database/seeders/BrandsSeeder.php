@@ -59,10 +59,20 @@ class BrandsSeeder extends Seeder
                 'website' => 'https://www.reebok.com',
                 'position' => 7,
             ],
+            [
+                'name' => 'Goodyear',
+                'slug' => 'goodyear',
+                'description' => 'Footwear for the driven. Calzado duradero y resistente.',
+                'website' => 'https://www.goodyearfootwear.com',
+                'position' => 8,
+            ],
         ];
 
         foreach ($brands as $brand) {
-            Brand::create($brand);
+            Brand::updateOrCreate(
+                ['slug' => $brand['slug']],
+                $brand
+            );
         }
     }
 }

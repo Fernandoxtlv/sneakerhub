@@ -140,8 +140,8 @@
                                 <div class="product-card-image">
                                     <a href="{{ route('product.show', $product) }}">
                                         @if($product->mainImage)
-                                            <img src="{{ Storage::url($product->mainImage->path_medium ?? $product->mainImage->path) }}"
-                                                alt="{{ $product->name }}">
+                                            <img src="{{ asset('storage/' . ($product->mainImage->path_medium ?? $product->mainImage->path)) }}"
+                                                alt="{{ $product->mainImage->alt_text ?? $product->name }}" loading="lazy">
                                         @else
                                             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
                                                 <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor"
@@ -200,10 +200,9 @@
                                         </a>
                                     </h3>
                                     <div class="flex items-center gap-2">
-                                        <span
-                                            class="text-xl font-bold text-gray-900">{{ $product->formatted_current_price }}</span>
+                                        <span class="text-xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
                                         @if($product->has_discount)
-                                            <span class="text-sm text-gray-400 line-through">{{ $product->formatted_price }}</span>
+                                            <span class="text-sm text-gray-400 line-through">{{ $product->formatted_original_price }}</span>
                                         @endif
                                     </div>
                                 </div>
